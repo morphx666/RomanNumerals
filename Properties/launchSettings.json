@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Roman": {
+      "commandName": "Project",
+      "commandLineArgs": "CCLI"
+    }
+  }
+}
