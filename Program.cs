@@ -12,6 +12,7 @@ namespace Roman {
                 if(int.TryParse(args[0], out int n)) {
                     Console.WriteLine(RomanNumerals.ToRomanNumeral(n));
                 } else {
+                    // TODO: Provide a switch to enable strict mode
                     Console.WriteLine(RomanNumerals.FromRomanNumeral(args[0].ToUpper()));
                 }
             } catch(Exception ex) {

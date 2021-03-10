@@ -37,7 +37,7 @@ namespace Roman {
         public static int FromRomanNumeral(string romNum, bool strict = false) {
             if(romNum == "N") return 0;
             int result = 0;
-            int lastVal = rn[0].Value;
+            int lastVal = int.MaxValue;
             int cCount = 0;
 
             Action<string, int> throwException = (string crn, int p) => {
@@ -55,7 +55,7 @@ namespace Roman {
                         int value = rn[j].Value;
                         if(lastVal < value) throwException(romNum, i);
                         if(lastVal == value) {
-                            if(++cCount >= 3) throwException(romNum, i);
+                            if(++cCount == 3) throwException(romNum, i);
                         } else {
                             cCount = 0;
                             lastVal = value;
