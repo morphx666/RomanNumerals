@@ -3,8 +3,8 @@ using System.Text;
 
 namespace Roman {
     public static class RomanNumerals {
-        private const string validRomNums = "IVXLCDM";
-        private static readonly (string Numeral, int Value)[] rn = {
+        private const string validRomanSymbols = "IVXLCDM";
+        private static readonly (string RomanNumeral, int DecimalValue)[] romanNumeralMappings = [
             ("M", 1000),
             ("CM", 900),
             ("D", 500),
@@ -18,24 +18,24 @@ namespace Roman {
             ("V", 5),
             ("IV", 4),
             ("I", 1)
-        };
+        ];
 
-        public static string ToRomanNumeral(int intArg) {
-            if(intArg == 0) return "N";
-            if(intArg < 0 || intArg > 3999) throw new ArgumentOutOfRangeException(nameof(intArg), $"Integer value '{intArg}' is out of range");
+        public static string ToRomanNumeral(int number) {
+            if(number == 0) return "N";
+            if(number < 0 || number > 3999) throw new ArgumentOutOfRangeException(nameof(number), $"Integer value '{number}' is out of range");
 
             StringBuilder result = new();
-            for(int i = 0; i < rn.Length; i++) {
-                while(intArg >= rn[i].Value) {
-                    intArg -= rn[i].Value;
-                    result.Append(rn[i].Numeral);
+            for(int i = 0; i < romanNumeralMappings.Length; i++) {
+                while(number >= romanNumeralMappings[i].DecimalValue) {
+                    number -= romanNumeralMappings[i].DecimalValue;
+                    result.Append(romanNumeralMappings[i].RomanNumeral);
                 }
             }
             return result.ToString();
         }
 
-        public static int FromRomanNumeral(string romNum, bool strict = false) {
-            if(romNum == "N") return 0;
+        public static int FromRomanNumeral(string romanNumeral, bool strict = false) {
+            if(romanNumeral == "N") return 0;
             int result = 0;
             int lastVal = int.MaxValue;
             int cCount = 0;
@@ -46,27 +46,27 @@ namespace Roman {
                 throw new ArgumentException(crn);
             };
 
-            for(int i = 0; i < romNum.Length;) {
-                if(!validRomNums.Contains(romNum[i])) throwException(romNum, i);
-                int nlen = romNum.Length - i;
-                for(int j = 0; j < rn.Length; j++) {
-                    int rnlen = rn[j].Numeral.Length;
-                    if(rn[j].Numeral == romNum.Substring(i, Math.Min(nlen, rnlen))) {
-                        int value = rn[j].Value;
-                        if(lastVal < value) throwException(romNum, i);
+            for(int i = 0; i < romanNumeral.Length;) {
+                if(!validRomanSymbols.Contains(romanNumeral[i])) throwException(romanNumeral, i);
+                int remainingLength = romanNumeral.Length - i;
+                for(int j = 0; j < romanNumeralMappings.Length; j++) {
+                    int romanNumeralLength = romanNumeralMappings[j].RomanNumeral.Length;
+                    if(romanNumeralMappings[j].RomanNumeral == romanNumeral.Substring(i, Math.Min(remainingLength, romanNumeralLength))) {
+                        int value = romanNumeralMappings[j].DecimalValue;
+                        if(lastVal < value) throwException(romanNumeral, i);
                         if(lastVal == value) {
-                            if(++cCount == 3) throwException(romNum, i);
+                            if(++cCount == 3) throwException(romanNumeral, i);
                         } else {
                             cCount = 0;
                             lastVal = value;
                         }
                         result += value;
-                        i += rnlen;
+                        i += romanNumeralLength;
                         break;
                     }
                 }
             }
-            if(strict && romNum != ToRomanNumeral(result)) throwException(romNum, 0);
+            if(strict && romanNumeral != ToRomanNumeral(result)) throwException(romanNumeral, 0);
             return result;
         }
     }
